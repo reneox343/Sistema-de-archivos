@@ -9,28 +9,25 @@ struct usuario{
 };
 
 struct carpeta {
-	long int padres;
-	vector<long int> hijos;
-	vector<long int> archivos;
+	int nombre;
+	struct carpeta *padre;
+	vector<struct carpeta> hijos;
+	vector<struct archivo> archivos;
 };
 
-struct metadatos{
-	long int permisos;
-	long int fecha;
-	int fileSize;
-	long int data;
-};
 
-struct archivos {
-	//si se completa a escribir en un bloc en caso de que no poner null y --->
-	long int data;
-	//si no se completa a escribir en un bloc contiene otras referencias
-	vector<long int> hijos;
+struct archivo {
+	int nombre = -1;
+	int extencion = -1;
+	int referencia = -1;
+	int fecha = -1;
+	int fileSize = -1;
 };
 
 struct volumen
 {
-	long int* blocs;
+	long int hijo = -1;
 	char* data;
 	bool usado = false;
+	int cantidad = -1;
 };

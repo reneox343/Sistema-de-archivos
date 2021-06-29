@@ -145,6 +145,9 @@
     <Text Include="ejemplo.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Archivos.h" />
+    <ClInclude Include="Carpetas.h" />
+    <ClInclude Include="Volumen.h" />
     <ClInclude Include="ManupulacionDeString.h" />
     <ClInclude Include="Structs.h" />
   </ItemGroup>

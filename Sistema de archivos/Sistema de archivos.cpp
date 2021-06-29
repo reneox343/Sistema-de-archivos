@@ -1,35 +1,49 @@
 // Sistema de archivos.cpp : Este archivo contiene la función "main". La ejecución del programa comienza y termina ahí.
 //librerias
 #include<iostream>
-#include<fstream>
-#include<sstream>
 #include<string>
 #include <bitset>
 #include <set>
+#include<sstream>
 //encabezados
 #include "Structs.h"
 #include "ManupulacionDeString.h"
-
+#include "Volumen.h"
+#include "Archivos.h"
+//#include "Carpetas.h"
 using namespace std;
 //funciones
-string getFileBits(string fileName);
 bool stringContains(string palabra, char caracter);
 string splitString(string str, char caracter, int pos);
+void ls();
 void menu(string opc);
-void crearVolumen(string nombre, int numberOfblocs, int  blocSize);
-int guardarEnVolumen(string str);
-void deleteVolumen(struct volumen* vol);
-//variables
-struct volumen* vol;
-string nombreDelVOlumen;
-int numberOfbloc = 0;
-int sizeOfBloc = 0;
 
 int main()
 {
-    crearVolumen("hola",3,3);
-    guardarEnVolumen("hola");
-    deleteVolumen(vol);
+
+
+    /*volumen*/
+    crearVolumen("hola",10,4);
+    //int popis = guardarEnVolumen("popi");
+    //cout << "ref" << guardarEnVolumen("reneastirola") <<endl;
+    //cout <<"posicion de la carpeta: " << carpetaActual->nombre<<endl;
+    //cout <<"nombre de la carpeta: " << leerVolumen(carpetaActual->nombre)<<endl;
+    //cout <<"posicion de popis: " << popis <<endl;
+    //cout <<"nombre de popis: " << leerVolumen(popis)<<endl;
+    //borrarBloc(popis);
+    //imprimirVolumen(5);
+    //borrarVolumen(vol);
+
+    /*con archivos*/
+    crearVolumen("hola",100,100);
+    
+    subirArchivo("rojo.png","rojoD");
+    //imprimirVolumen(6);
+    //descargarArchivo("rojoD.txt", "rojoD");
+    ls();
+    borrarVolumen(vol);
+
+    /*menu*/
     //string opc;
     //do {
     //    cout << ">> ";
@@ -65,13 +79,16 @@ void menu(string opc){
 
         }
         else if (subopc == "load") {
-            string originalname = splitString(opc,' ', 2);
+            string nombreOriginal = splitString(opc,' ', 2);
             string copia = splitString(opc, ' ', 3);
+            subirArchivo(nombreOriginal, copia);
 
         }
         else if (subopc == "download") {
             string archivo = splitString(opc, ' ', 2);
             string copia = splitString(opc, ' ', 3);
+            descargarArchivo(archivo, copia);
+
         }
         else if (subopc == "rm") {
             string directorio = splitString(opc, ' ', 2);
@@ -83,10 +100,11 @@ void menu(string opc){
         }
         else if (subopc == "mkdir") {
             string dirname = splitString(opc, ' ', 2);
-
+            crearCarpeta(dirname);
         }
         else if (subopc == "cd") {
             string directorio = splitString(opc, ' ', 2);
+
         }
     }
     else {
@@ -95,7 +113,7 @@ void menu(string opc){
 
         }
         else if (opc == "ls") {
-
+            ls();
         }
         else if (opc == "info") {
 
@@ -108,119 +126,17 @@ void menu(string opc){
 
 }
 
-string getFileBits(string fileName){
 
-    ifstream f("ejemplo.txt"); //taking file as inputstream
-    string str;
-    //leer string de archivo
-    if (f) {
-        ostringstream ss;
-        ss << f.rdbuf();  
-        str = ss.str();
-    }
-    return str;
-}
+void ls() {
 
-
-
-void crearVolumen(string nombre, int blocs, int size) {
-
-    vol = new struct volumen [blocs];
-    for (int i = 0; i < blocs; i++)
-    {
-        vol[i].data = new char[size];
-        vol[i].blocs = new long int[2];
-    }
-    
-    if (vol == NULL) {
-        cout << "dude new es hermoso" << endl;
-        delete[] vol;
-    }
-    numberOfbloc = blocs;
-    sizeOfBloc = size;
-}
-
-int guardarEnVolumen(string str) {
-    if (sizeOfBloc == 0 || numberOfbloc == 0) {
-        cout << "El volumen no ha sido inicializado"<<endl;
-        return NULL;
-    }
-    if (str.size() <= sizeOfBloc) {
-        for (size_t i = 0; i < numberOfbloc; i++)
-        {
-            if (vol[i].usado == true)continue;
-            for (size_t j = 0; j < str.size(); j++)
-            {
-                vol[i].data[j] = str[j];
-            }
-            vol[i].usado = true;
-            cout << vol[i].data <<endl;
-            cout << "guardado"<<endl;
-            return i;
-        }
+    for (auto& item : carpetaActual->archivos) {
+        cout <<"\t"<< leerVolumen(item.nombre) << leerVolumen(item.extencion) << endl;
 
     }
-    else {
-        string substr = str.substr(0, sizeOfBloc);
-        for (size_t i = 0; i < numberOfbloc; i++)
-        {
-            if (vol[i].usado == true)continue;
-            for (size_t j = 0; j < substr.size(); j++)
-            {
-                vol[i].data[j] = substr[j];
-            }
-            vol[i].usado = true;
-            cout << vol[i].data << endl;
-            cout << "guardado" << endl;
-            return i;
-        }
-        string residuo = str.substr(sizeOfBloc, str.size());
-        //int substrPos = guardarEnVolumen(substr);
 
-        cout << substr<<endl<<residuo<<endl;
+    for (auto& item : carpetaActual->hijos) {
+        cout<<"\t" << leerVolumen(item.nombre) << endl;
     }
 
 }
-void deleteVolumen(struct volumen* vol) {    
-        if (vol != NULL) {
-            delete[] vol;
-        }
-    }
-
-/*
-void delVolumen(struct volumen* vol) {
-    // Can safely assume vector is NULL or fully built.
-
-    if (vol != NULL) {
-        free(vol->data);
-        free(vol);
-    }
-}
- */
-
-/*
-void crearVolumen(string nombre, int numberOfBlocs,int blocSize){
-
-    vol = (struct volumen*)malloc(sizeof(struct volumen) * numberOfBlocs);
-    if (vol == NULL)
-        cout << "malloc me pega wey y no se por que" << endl;
-    vol->data = (char*)malloc(blocSize * sizeof(char));
-    if (vol->data == NULL) {
-        free(vol);
-        cout << "malloc malo" << endl;
-    }
-    vol->bloc = (long int*)malloc(blocSize * sizeof(long int));
-    if (vol->bloc == NULL) {
-        free(vol);
-        cout << "malloc malo" << endl;
-    }
-    vol->nombre = -1;
-    vol->usado = false;
-
-}
-*/
-
-
-//memset deja que declares un arreglo con apuntador a caracter y deja en tienpo 
-//de ejecucion que yo escoja el espacio de memoria (consejo de alcaraz)
 

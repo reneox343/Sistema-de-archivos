@@ -34,5 +34,14 @@
     <ClInclude Include="ManupulacionDeString.h">
       <Filter>Archivos de origen</Filter>
     </ClInclude>
+    <ClInclude Include="Volumen.h">
+      <Filter>Archivos de origen</Filter>
+    </ClInclude>
+    <ClInclude Include="Carpetas.h">
+      <Filter>Archivos de origen</Filter>
+    </ClInclude>
+    <ClInclude Include="Archivos.h">
+      <Filter>Archivos de origen</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
